@@ -1,0 +1,5 @@
+insert into users(name) values('carlos guzman')
+insert into users(name) values('rafael anaya')
+insert into users(name) values('amanda gomez')
+insert into users(name) values('carlos rubalcava')
+insert into users(name) values('griselda blanco')
