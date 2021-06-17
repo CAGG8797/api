@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class User implements Serializable {
 
     @Id
@@ -39,7 +39,23 @@ public class User implements Serializable {
     }
 
     public void addFollower(User follower){
-        followers.add(follower);
+        getFollowers().add(follower);
     }
 
+    public boolean existFollower(User follower){
+        return getFollowers().contains(follower);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getId().equals(user.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

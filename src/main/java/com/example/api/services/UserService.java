@@ -36,6 +36,9 @@ public class UserService implements IUserService{
         if ( !follower.isPresent() )
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Follower not found");
 
+        if ( user.get().existFollower(follower.get()) )
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The follower already follows the user.");
+
         user.get().addFollower(follower.get());
 
     }
