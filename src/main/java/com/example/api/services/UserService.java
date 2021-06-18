@@ -1,6 +1,9 @@
 package com.example.api.services;
 
+import com.example.api.dto.PostDTO;
+import com.example.api.models.Post;
 import com.example.api.models.User;
+import com.example.api.repositories.PostRepository;
 import com.example.api.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,46 @@ public class UserService implements IUserService{
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Override
+    public User getUser(Integer id) {
+
+        Optional<User> user = usersRepository.findById(id);
+
+        if ( !user.isPresent() )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        return user.get();
+
+    }
+
+    @Transactional
+    @Override
+    public PostDTO createPost(Post post, User user) {
+
+        Optional<User> userOptional = null;
+
+        if ( post.getContent() == null || post.getContent().isEmpty() )
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post must have content");
+
+         userOptional = (user.getId() != null) ? usersRepository.findById(user.getId()) : Optional.empty();
+
+        if ( !userOptional.isPresent() )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        user = userOptional.get();
+
+        post.setUser(user);
+
+        post = postRepository.save(post);
+
+        return new PostDTO(post.getId(), post.getContent(),
+                post.getUser().getId(), post.getUser().getName());
+
+    }
 
     @Transactional
     @Override
@@ -42,4 +85,6 @@ public class UserService implements IUserService{
         user.get().addFollower(follower.get());
 
     }
+
+
 }

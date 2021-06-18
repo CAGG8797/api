@@ -1,11 +1,10 @@
 package com.example.api.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,14 @@ public class User implements Serializable {
     @Column(name = "Name",
             nullable = false,
             length = 300)
+    @NotNull( message = "Name must not null")
+    @Size(  max = 300,
+            message = "Max length of name is 300")
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY,
+                mappedBy = "user")
+    private List<Post> posts;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Followers",
