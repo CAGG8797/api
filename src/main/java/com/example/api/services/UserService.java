@@ -6,12 +6,15 @@ import com.example.api.models.User;
 import com.example.api.repositories.PostRepository;
 import com.example.api.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService{
@@ -86,5 +89,16 @@ public class UserService implements IUserService{
 
     }
 
+    @Override
+    public List<PostDTO> getPostFollowed(User user, Pageable pageable) {
+
+        List<Post> posts = postRepository.getPosts(user, pageable);
+
+        return posts
+                .stream()
+                .map(post -> new PostDTO(post.getId(), post.getContent(),post.getUser().getId(), post.getUser().getName()))
+                .collect(Collectors.toList());
+
+    }
 
 }
