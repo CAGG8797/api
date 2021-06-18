@@ -25,8 +25,7 @@ public class User implements Serializable {
             nullable = false,
             length = 300)
     @NotNull( message = "Name must not null")
-    @Size(  max = 300,
-            message = "Max length of name is 300")
+    @Size(max = 300, message = "Max length of name is 300")
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY,

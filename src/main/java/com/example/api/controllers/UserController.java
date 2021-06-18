@@ -6,6 +6,7 @@ import com.example.api.models.User;
 import com.example.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserController {
     UserService service;
 
     @GetMapping("{idUser}/post/followed")
-    public List<PostDTO> getPosts(@PageableDefault Pageable pageable,
+    public List<PostDTO> getPosts(@PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
                                   @PathVariable("idUser") Integer idUser){
 
         User user = service.getUser(idUser);

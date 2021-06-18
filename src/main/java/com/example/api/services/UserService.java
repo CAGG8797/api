@@ -57,7 +57,7 @@ public class UserService implements IUserService{
 
         post = postRepository.save(post);
 
-        return new PostDTO(post.getId(), post.getContent(),
+        return new PostDTO(post.getId(), post.getContent(),post.getCreationDate(),
                 post.getUser().getId(), post.getUser().getName());
 
     }
@@ -96,7 +96,7 @@ public class UserService implements IUserService{
 
         return posts
                 .stream()
-                .map(post -> new PostDTO(post.getId(), post.getContent(),post.getUser().getId(), post.getUser().getName()))
+                .map(post -> new PostDTO(post.getId(), post.getContent(),post.getCreationDate(), post.getUser().getId(), post.getUser().getName()))
                 .collect(Collectors.toList());
 
     }
