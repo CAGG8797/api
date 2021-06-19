@@ -1,5 +1,6 @@
 package com.example.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,20 @@ public class User implements Serializable {
     @NotNull( message = "Name must not null")
     @Size(max = 300, message = "Max length of name is 300")
     private String name;
+
+    @Column(name = "Username",
+            nullable = false,
+            unique = true,
+            length = 100)
+    @NotNull( message = "Username must not null")
+    @Size(max = 100, message = "Max length of username is 300")
+    private String username;
+
+    @Column(name = "Password",
+            nullable = false,
+            length = 200)
+    @JsonIgnore
+    private String password;
 
     @OneToMany(fetch = FetchType.LAZY,
                 mappedBy = "user")
