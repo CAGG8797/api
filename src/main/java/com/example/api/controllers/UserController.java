@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,33 +21,34 @@ public class UserController {
     @Autowired
     UserService service;
 
-    @GetMapping("{idUser}/post/followed")
+    @GetMapping("post/followed")
     public List<PostDTO> getPosts(@PageableDefault(sort = "creationDate", direction = Sort.Direction.DESC) Pageable pageable,
-                                  @PathVariable("idUser") Integer idUser){
+                                  OAuth2Authentication authentication){
 
-        User user = service.getUser(idUser);
+        User user = service.getUser(authentication.getPrincipal().toString());
 
         return service.getPostFollowed(user, pageable);
 
     }
 
-    @PostMapping("{idUser}/post")
+    @PostMapping("post")
     @ResponseStatus(HttpStatus.CREATED)
-    public PostDTO postear(@PathVariable("idUser") Integer idUser,
-            @RequestBody Post post){
+    public PostDTO postear(@RequestBody Post post,
+                           OAuth2Authentication authentication){
 
-        User user = service.getUser(idUser);
+        User user = service.getUser(authentication.getPrincipal().toString());
 
         return service.createPost(post, user);
 
     }
 
-    @PostMapping("follow/{idUser}")
+    @PostMapping("{idUser}/follow")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void follow(@PathVariable("idUser") Integer idUser,
-                       @RequestParam("idFollower") Integer idFollower){
+                       OAuth2Authentication authentication){
 
-        service.followUser(idUser,idFollower);
+        service.followUser(idUser,
+                service.getUser(authentication.getPrincipal().toString()).getId());
 
     }
 

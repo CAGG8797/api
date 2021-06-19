@@ -11,6 +11,8 @@ public interface IUserService {
 
     public User getUser(Integer id);
 
+    public User getUser(String username);
+
     public PostDTO createPost(Post post, User user);
 
     public void followUser(Integer idUser, Integer idFollower);

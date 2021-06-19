@@ -37,6 +37,18 @@ public class UserService implements IUserService{
 
     }
 
+    @Override
+    public User getUser(String username) {
+
+        Optional<User> user = usersRepository.findByUsername(username);
+
+        if ( !user.isPresent() )
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        return user.get();
+
+    }
+
     @Transactional
     @Override
     public PostDTO createPost(Post post, User user) {
